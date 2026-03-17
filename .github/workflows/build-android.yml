@@ -36,6 +36,13 @@ jobs:
         node create-simple-icon.js
       continue-on-error: true
         
+    - name: Remove existing Android platform
+      run: |
+        if [ -d "android" ]; then
+          echo "Removing existing android directory..."
+          rm -rf android
+        fi
+        
     - name: Add Android platform
       run: npx cap add android
       
