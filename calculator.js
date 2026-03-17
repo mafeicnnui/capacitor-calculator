@@ -231,6 +231,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // 全局暴露用于调试
     window.calc = calc;
     
+    // 尝试隐藏状态栏（如果在 Capacitor 环境中）
+    if (window.Capacitor) {
+        import('@capacitor/status-bar').then(({ StatusBar }) => {
+            StatusBar.hide().catch(err => console.log('StatusBar hide failed:', err));
+        }).catch(err => console.log('StatusBar plugin not available:', err));
+    }
+    
     console.log('Calculator setup complete');
 });
 
