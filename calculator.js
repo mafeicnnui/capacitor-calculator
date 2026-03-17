@@ -6,31 +6,8 @@ class Calculator {
         this.previousInput = null;
         this.waitingForOperand = false;
         
-        // 添加触摸反馈
-        this.addTouchFeedback();
-    }
-
-    addTouchFeedback() {
-        // 为所有按钮添加触摸反馈
-        const buttons = document.querySelectorAll('.btn');
-        buttons.forEach(button => {
-            button.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                button.style.transform = 'scale(0.95)';
-            });
-            
-            button.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                setTimeout(() => {
-                    button.style.transform = 'scale(1)';
-                }, 100);
-            });
-            
-            button.addEventListener('touchcancel', (e) => {
-                e.preventDefault();
-                button.style.transform = 'scale(1)';
-            });
-        });
+        console.log('Calculator initialized');
+        this.updateDisplay();
     }
 
     updateDisplay() {
@@ -44,9 +21,12 @@ class Calculator {
             }
         }
         this.display.value = displayValue;
+        console.log('Display updated:', displayValue);
     }
 
     inputNumber(num) {
+        console.log('Input number:', num);
+        
         if (this.waitingForOperand) {
             this.currentInput = num;
             this.waitingForOperand = false;
@@ -71,6 +51,8 @@ class Calculator {
     }
 
     inputOperator(nextOperator) {
+        console.log('Input operator:', nextOperator);
+        
         const inputValue = parseFloat(this.currentInput);
 
         if (this.previousInput === null) {
@@ -90,6 +72,8 @@ class Calculator {
     }
 
     performCalculation(firstOperand, secondOperand, operator) {
+        console.log('Calculating:', firstOperand, operator, secondOperand);
+        
         switch (operator) {
             case '+':
                 return firstOperand + secondOperand;
@@ -109,6 +93,8 @@ class Calculator {
     }
 
     calculate() {
+        console.log('Calculate pressed');
+        
         const inputValue = parseFloat(this.currentInput);
 
         if (this.previousInput !== null && this.operator) {
@@ -124,6 +110,8 @@ class Calculator {
     }
 
     clearAll() {
+        console.log('Clear all');
+        
         this.currentInput = '0';
         this.previousInput = null;
         this.operator = null;
@@ -133,12 +121,16 @@ class Calculator {
     }
 
     clearEntry() {
+        console.log('Clear entry');
+        
         this.currentInput = '0';
         this.updateDisplay();
         this.vibrate();
     }
 
     deleteLast() {
+        console.log('Delete last');
+        
         if (this.currentInput.length > 1) {
             this.currentInput = this.currentInput.slice(0, -1);
         } else {
@@ -149,6 +141,8 @@ class Calculator {
     }
 
     showError(message) {
+        console.log('Error:', message);
+        
         // 在移动端显示错误提示
         const originalValue = this.display.value;
         this.display.value = message;
@@ -165,32 +159,84 @@ class Calculator {
     }
 }
 
-// 创建计算器实例
-const calc = new Calculator();
+// 等待 DOM 加载完成后初始化
+let calc;
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing calculator...');
+    calc = new Calculator();
+    
+    // 添加触摸事件监听器
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.style.transform = 'scale(0.95)';
+        });
+        
+        button.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
+        
+        button.addEventListener('touchcancel', function(e) {
+            e.preventDefault();
+            this.style.transform = 'scale(1)';
+        });
+    });
+    
+    console.log('Calculator setup complete');
+});
 
 // 全局函数，供 HTML 调用
 function inputNumber(num) {
-    calc.inputNumber(num);
+    if (calc) {
+        calc.inputNumber(num);
+    } else {
+        console.error('Calculator not initialized');
+    }
 }
 
 function inputOperator(op) {
-    calc.inputOperator(op);
+    if (calc) {
+        calc.inputOperator(op);
+    } else {
+        console.error('Calculator not initialized');
+    }
 }
 
 function calculate() {
-    calc.calculate();
+    if (calc) {
+        calc.calculate();
+    } else {
+        console.error('Calculator not initialized');
+    }
 }
 
 function clearAll() {
-    calc.clearAll();
+    if (calc) {
+        calc.clearAll();
+    } else {
+        console.error('Calculator not initialized');
+    }
 }
 
 function clearEntry() {
-    calc.clearEntry();
+    if (calc) {
+        calc.clearEntry();
+    } else {
+        console.error('Calculator not initialized');
+    }
 }
 
 function deleteLast() {
-    calc.deleteLast();
+    if (calc) {
+        calc.deleteLast();
+    } else {
+        console.error('Calculator not initialized');
+    }
 }
 
 // 防止页面滚动和缩放
@@ -212,3 +258,5 @@ document.addEventListener('touchend', function (event) {
 document.addEventListener('contextmenu', (e) => {
     e.preventDefault();
 });
+
+console.log('Calculator script loaded');

@@ -8,7 +8,7 @@ if (!fs.existsSync(distDir)) {
 }
 
 // 复制文件
-const filesToCopy = ['index.html', 'style.css', 'calculator.js'];
+const filesToCopy = ['index.html', 'style.css', 'calculator.js', 'debug.html'];
 
 filesToCopy.forEach(file => {
     const src = path.join(__dirname, file);

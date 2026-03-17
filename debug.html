@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>计算器调试版</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            z-index: 1000;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info" id="debugInfo">
+        调试信息加载中...
+    </div>
+    
+    <div class="app">
+        <div class="calculator">
+            <div class="display">
+                <input type="text" id="result" readonly value="0">
+            </div>
+            
+            <div class="buttons">
+                <button class="btn clear" onclick="testClick('C')">C</button>
+                <button class="btn clear" onclick="testClick('CE')">CE</button>
+                <button class="btn operator" onclick="testClick('⌫')">⌫</button>
+                <button class="btn operator" onclick="testClick('/')">/</button>
+                
+                <button class="btn number" onclick="testClick('7')">7</button>
+                <button class="btn number" onclick="testClick('8')">8</button>
+                <button class="btn number" onclick="testClick('9')">9</button>
+                <button class="btn operator" onclick="testClick('×')">×</button>
+                
+                <button class="btn number" onclick="testClick('4')">4</button>
+                <button class="btn number" onclick="testClick('5')">5</button>
+                <button class="btn number" onclick="testClick('6')">6</button>
+                <button class="btn operator" onclick="testClick('-')">-</button>
+                
+                <button class="btn number" onclick="testClick('1')">1</button>
+                <button class="btn number" onclick="testClick('2')">2</button>
+                <button class="btn number" onclick="testClick('3')">3</button>
+                <button class="btn operator" onclick="testClick('+')">+</button>
+                
+                <button class="btn number zero" onclick="testClick('0')">0</button>
+                <button class="btn number" onclick="testClick('.')">.</button>
+                <button class="btn equals" onclick="testClick('=')">=</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let debugLog = [];
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push(`${timestamp}: ${message}`);
+            updateDebugInfo();
+            console.log(message);
+        }
+        
+        function updateDebugInfo() {
+            const debugInfo = document.getElementById('debugInfo');
+            if (debugInfo) {
+                debugInfo.innerHTML = debugLog.slice(-5).join('<br>');
+            }
+        }
+        
+        function testClick(button) {
+            log(`按钮 ${button} 被点击`);
+            
+            // 更新显示
+            const result = document.getElementById('result');
+            if (result) {
+                result.value = `点击了: ${button}`;
+            }
+            
+            // 震动反馈
+            if ('vibrate' in navigator) {
+                navigator.vibrate(50);
+                log('震动反馈已触发');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            log('DOM 加载完成');
+            log('用户代理: ' + navigator.userAgent);
+            log('屏幕尺寸: ' + screen.width + 'x' + screen.height);
+            
+            // 测试触摸事件
+            document.addEventListener('touchstart', function() {
+                log('检测到触摸开始');
+            });
+            
+            document.addEventListener('click', function() {
+                log('检测到点击事件');
+            });
+        });
+        
+        // 错误处理
+        window.addEventListener('error', function(e) {
+            log('JavaScript 错误: ' + e.message);
+        });
+        
+        log('调试脚本已加载');
+    </script>
+</body>
+</html>
