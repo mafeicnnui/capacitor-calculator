@@ -4,17 +4,12 @@
   "description": "A calculator app built with Capacitor",
   "main": "index.js",
   "scripts": {
-    "build": "npm run copy-files",
-    "copy-files": "if not exist dist mkdir dist && copy index.html dist\\ && copy style.css dist\\ && copy calculator.js dist\\",
+    "build": "node build.js",
     "open:android": "npx cap open android",
-    "open:ios": "npx cap open ios",
     "sync": "npm run build && npx cap sync",
     "sync:android": "npm run build && npx cap sync android",
-    "sync:ios": "npm run build && npx cap sync ios",
     "add:android": "npm run build && npx cap add android",
-    "add:ios": "npm run build && npx cap add ios",
-    "serve": "npx http-server . -p 3000",
-    "build:android": "npm run sync:android && npx cap open android"
+    "serve": "npx http-server . -p 3000"
   },
   "dependencies": {
     "@capacitor/android": "^5.6.0",
