@@ -29,6 +29,40 @@ jobs:
       
     - name: Build web assets
       run: npm run build
+      
+    - name: Generate app icons
+      run: |
+        # 安装 ImageMagick 用于图标生成
+        sudo apt-get update
+        sudo apt-get install -y imagemagick
+        
+        # 创建一个简单的计算器图标
+        convert -size 512x512 xc:'#2c3e50' \
+          -fill '#34495e' -draw 'roundrectangle 32,32 480,480 48,48' \
+          -fill '#1a252f' -draw 'roundrectangle 64,64 448,160 12,12' \
+          -fill '#00ff88' -pointsize 36 -font Arial-Bold -gravity center \
+          -draw 'text 0,-120 "123.45"' \
+          -fill '#95a5a6' -draw 'roundrectangle 80,192 152,240 8,8' \
+          -fill '#e67e22' -draw 'roundrectangle 344,192 416,240 8,8' \
+          -fill '#27ae60' -draw 'roundrectangle 344,448 416,496 8,8' \
+          -fill 'white' -pointsize 20 -font Arial-Bold \
+          -draw 'text 116,222 "C"' \
+          -draw 'text 380,222 "÷"' \
+          -draw 'text 380,478 "="' \
+          /tmp/icon-512.png
+        
+        # 创建不同尺寸的图标
+        mkdir -p android/app/src/main/res/mipmap-mdpi
+        mkdir -p android/app/src/main/res/mipmap-hdpi  
+        mkdir -p android/app/src/main/res/mipmap-xhdpi
+        mkdir -p android/app/src/main/res/mipmap-xxhdpi
+        mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+        
+        convert /tmp/icon-512.png -resize 48x48 android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+        convert /tmp/icon-512.png -resize 72x72 android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+        convert /tmp/icon-512.png -resize 96x96 android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+        convert /tmp/icon-512.png -resize 144x144 android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+        convert /tmp/icon-512.png -resize 192x192 android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
         
     - name: Add Android platform
       run: npx cap add android

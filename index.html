@@ -2,11 +2,32 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>计算器</title>
     <link rel="stylesheet" href="style.css">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
+    <meta name="theme-color" content="#667eea">
+    <style>
+        /* 确保全屏显示 */
+        html, body {
+            height: 100vh;
+            height: 100dvh; /* 动态视口高度 */
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        /* 适配刘海屏和状态栏 */
+        .app {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+    </style>
 </head>
 <body>
     <div class="app">

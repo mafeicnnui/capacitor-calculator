@@ -12,6 +12,20 @@ const config: CapacitorConfig = {
       keystorePath: undefined,
       keystoreAlias: undefined,
     }
+  },
+  plugins: {
+    StatusBar: {
+      style: 'dark',
+      backgroundColor: '#667eea',
+      overlay: false,
+    },
+    SplashScreen: {
+      launchShowDuration: 0,
+      backgroundColor: '#667eea',
+      androidSplashResourceName: 'splash',
+      androidScaleType: 'CENTER_CROP',
+      showSpinner: false,
+    }
   }
 };
 
