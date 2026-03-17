@@ -73,6 +73,9 @@ class Calculator {
             case 'delete':
                 this.deleteLast();
                 break;
+            case 'function':
+                this.executeFunction(value);
+                break;
             default:
                 console.log('Unknown action:', action);
         }
@@ -198,6 +201,43 @@ class Calculator {
         } else {
             this.currentInput = '0';
         }
+        this.updateDisplay();
+    }
+
+    executeFunction(func) {
+        console.log('Execute function:', func);
+        
+        const currentValue = parseFloat(this.currentInput);
+        let result;
+        
+        switch (func) {
+            case 'sqrt':
+                if (currentValue < 0) {
+                    this.showError('负数无法开方');
+                    return;
+                }
+                result = Math.sqrt(currentValue);
+                break;
+            case 'square':
+                result = currentValue * currentValue;
+                break;
+            case 'percent':
+                // 如果有前一个操作数，计算百分比
+                if (this.previousInput !== null) {
+                    result = (this.previousInput * currentValue) / 100;
+                } else {
+                    result = currentValue / 100;
+                }
+                break;
+            case 'negate':
+                result = currentValue * -1;
+                break;
+            default:
+                return;
+        }
+        
+        this.currentInput = String(result);
+        this.waitingForOperand = true;
         this.updateDisplay();
     }
 
