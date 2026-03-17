@@ -1,3 +1,4 @@
+// 简化的计算器实现，使用事件委托避免 onclick 问题
 class Calculator {
     constructor() {
         this.display = document.getElementById('result');
@@ -8,10 +9,76 @@ class Calculator {
         
         console.log('Calculator initialized');
         this.updateDisplay();
+        this.bindEvents();
+    }
+
+    bindEvents() {
+        // 使用事件委托，避免 onclick 属性问题
+        const buttonsContainer = document.querySelector('.buttons');
+        if (buttonsContainer) {
+            buttonsContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('button');
+                if (!button) return;
+                
+                e.preventDefault();
+                this.handleButtonClick(button);
+            });
+            
+            // 添加触摸事件
+            buttonsContainer.addEventListener('touchend', (e) => {
+                const button = e.target.closest('button');
+                if (!button) return;
+                
+                e.preventDefault();
+                this.handleButtonClick(button);
+            });
+            
+            console.log('Events bound successfully');
+        } else {
+            console.error('Buttons container not found');
+        }
+    }
+
+    handleButtonClick(button) {
+        const action = button.dataset.action;
+        const value = button.dataset.value;
+        
+        console.log('Button clicked:', action, value);
+        
+        // 触摸反馈
+        this.vibrate();
+        
+        // 视觉反馈
+        button.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            button.style.transform = 'scale(1)';
+        }, 100);
+        
+        switch (action) {
+            case 'number':
+                this.inputNumber(value);
+                break;
+            case 'operator':
+                this.inputOperator(value);
+                break;
+            case 'calculate':
+                this.calculate();
+                break;
+            case 'clear':
+                this.clearAll();
+                break;
+            case 'clear-entry':
+                this.clearEntry();
+                break;
+            case 'delete':
+                this.deleteLast();
+                break;
+            default:
+                console.log('Unknown action:', action);
+        }
     }
 
     updateDisplay() {
-        // 限制显示长度，防止溢出
         let displayValue = this.currentInput;
         if (displayValue.length > 12) {
             if (displayValue.includes('.')) {
@@ -34,7 +101,6 @@ class Calculator {
             if (this.currentInput === '0') {
                 this.currentInput = num;
             } else {
-                // 防止输入过长
                 if (this.currentInput.length < 12) {
                     this.currentInput += num;
                 }
@@ -42,12 +108,12 @@ class Calculator {
         }
         
         // 防止多个小数点
-        if (num === '.' && this.currentInput.includes('.')) {
+        if (num === '.' && this.currentInput.split('.').length > 2) {
+            this.currentInput = this.currentInput.slice(0, -1);
             return;
         }
         
         this.updateDisplay();
-        this.vibrate();
     }
 
     inputOperator(nextOperator) {
@@ -68,7 +134,6 @@ class Calculator {
 
         this.waitingForOperand = true;
         this.operator = nextOperator;
-        this.vibrate();
     }
 
     performCalculation(firstOperand, secondOperand, operator) {
@@ -106,7 +171,6 @@ class Calculator {
             this.waitingForOperand = true;
             this.updateDisplay();
         }
-        this.vibrate();
     }
 
     clearAll() {
@@ -117,7 +181,6 @@ class Calculator {
         this.operator = null;
         this.waitingForOperand = false;
         this.updateDisplay();
-        this.vibrate();
     }
 
     clearEntry() {
@@ -125,7 +188,6 @@ class Calculator {
         
         this.currentInput = '0';
         this.updateDisplay();
-        this.vibrate();
     }
 
     deleteLast() {
@@ -137,13 +199,11 @@ class Calculator {
             this.currentInput = '0';
         }
         this.updateDisplay();
-        this.vibrate();
     }
 
     showError(message) {
         console.log('Error:', message);
         
-        // 在移动端显示错误提示
         const originalValue = this.display.value;
         this.display.value = message;
         setTimeout(() => {
@@ -152,7 +212,6 @@ class Calculator {
     }
 
     vibrate() {
-        // 添加触觉反馈（如果设备支持）
         if ('vibrate' in navigator) {
             navigator.vibrate(50);
         }
@@ -160,84 +219,20 @@ class Calculator {
 }
 
 // 等待 DOM 加载完成后初始化
-let calc;
-
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing calculator...');
-    calc = new Calculator();
     
-    // 添加触摸事件监听器
-    const buttons = document.querySelectorAll('.btn');
-    buttons.forEach(button => {
-        button.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            this.style.transform = 'scale(0.95)';
-        });
-        
-        button.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 100);
-        });
-        
-        button.addEventListener('touchcancel', function(e) {
-            e.preventDefault();
-            this.style.transform = 'scale(1)';
-        });
-    });
+    // 添加一些调试信息
+    console.log('User Agent:', navigator.userAgent);
+    console.log('Screen size:', screen.width + 'x' + screen.height);
+    
+    const calc = new Calculator();
+    
+    // 全局暴露用于调试
+    window.calc = calc;
     
     console.log('Calculator setup complete');
 });
-
-// 全局函数，供 HTML 调用
-function inputNumber(num) {
-    if (calc) {
-        calc.inputNumber(num);
-    } else {
-        console.error('Calculator not initialized');
-    }
-}
-
-function inputOperator(op) {
-    if (calc) {
-        calc.inputOperator(op);
-    } else {
-        console.error('Calculator not initialized');
-    }
-}
-
-function calculate() {
-    if (calc) {
-        calc.calculate();
-    } else {
-        console.error('Calculator not initialized');
-    }
-}
-
-function clearAll() {
-    if (calc) {
-        calc.clearAll();
-    } else {
-        console.error('Calculator not initialized');
-    }
-}
-
-function clearEntry() {
-    if (calc) {
-        calc.clearEntry();
-    } else {
-        console.error('Calculator not initialized');
-    }
-}
-
-function deleteLast() {
-    if (calc) {
-        calc.deleteLast();
-    } else {
-        console.error('Calculator not initialized');
-    }
-}
 
 // 防止页面滚动和缩放
 document.addEventListener('touchmove', function(e) {

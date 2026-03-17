@@ -16,29 +16,29 @@
             </div>
             
             <div class="buttons">
-                <button class="btn clear" onclick="clearAll()">C</button>
-                <button class="btn clear" onclick="clearEntry()">CE</button>
-                <button class="btn operator" onclick="deleteLast()">⌫</button>
-                <button class="btn operator" onclick="inputOperator('/')">/</button>
+                <button class="btn clear" data-action="clear">C</button>
+                <button class="btn clear" data-action="clear-entry">CE</button>
+                <button class="btn operator" data-action="delete">⌫</button>
+                <button class="btn operator" data-action="operator" data-value="/">/</button>
                 
-                <button class="btn number" onclick="inputNumber('7')">7</button>
-                <button class="btn number" onclick="inputNumber('8')">8</button>
-                <button class="btn number" onclick="inputNumber('9')">9</button>
-                <button class="btn operator" onclick="inputOperator('*')">×</button>
+                <button class="btn number" data-action="number" data-value="7">7</button>
+                <button class="btn number" data-action="number" data-value="8">8</button>
+                <button class="btn number" data-action="number" data-value="9">9</button>
+                <button class="btn operator" data-action="operator" data-value="*">×</button>
                 
-                <button class="btn number" onclick="inputNumber('4')">4</button>
-                <button class="btn number" onclick="inputNumber('5')">5</button>
-                <button class="btn number" onclick="inputNumber('6')">6</button>
-                <button class="btn operator" onclick="inputOperator('-')">-</button>
+                <button class="btn number" data-action="number" data-value="4">4</button>
+                <button class="btn number" data-action="number" data-value="5">5</button>
+                <button class="btn number" data-action="number" data-value="6">6</button>
+                <button class="btn operator" data-action="operator" data-value="-">-</button>
                 
-                <button class="btn number" onclick="inputNumber('1')">1</button>
-                <button class="btn number" onclick="inputNumber('2')">2</button>
-                <button class="btn number" onclick="inputNumber('3')">3</button>
-                <button class="btn operator" onclick="inputOperator('+')">+</button>
+                <button class="btn number" data-action="number" data-value="1">1</button>
+                <button class="btn number" data-action="number" data-value="2">2</button>
+                <button class="btn number" data-action="number" data-value="3">3</button>
+                <button class="btn operator" data-action="operator" data-value="+">+</button>
                 
-                <button class="btn number zero" onclick="inputNumber('0')">0</button>
-                <button class="btn number" onclick="inputNumber('.')">.</button>
-                <button class="btn equals" onclick="calculate()">=</button>
+                <button class="btn number zero" data-action="number" data-value="0">0</button>
+                <button class="btn number" data-action="number" data-value=".">.</button>
+                <button class="btn equals" data-action="calculate">=</button>
             </div>
         </div>
     </div>
