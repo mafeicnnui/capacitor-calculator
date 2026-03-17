@@ -9,9 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -37,9 +34,21 @@ jobs:
       run: |
         node generate-icons.js
         node create-simple-icon.js
+      continue-on-error: true
         
     - name: Add Android platform
       run: npx cap add android
+      
+    - name: Copy icons to Android resources
+      run: |
+        if [ -d "android/app/src/main/res" ]; then
+          echo "Android resources directory exists"
+          ls -la android/app/src/main/res/
+        else
+          echo "Creating Android resources directory"
+          mkdir -p android/app/src/main/res
+        fi
+      continue-on-error: true
       
     - name: Sync to Android
       run: npx cap sync android
@@ -50,7 +59,12 @@ jobs:
     - name: Build Debug APK
       run: |
         cd android
-        ./gradlew assembleDebug --no-daemon --stacktrace
+        ./gradlew assembleDebug --no-daemon --stacktrace --info
+        
+    - name: List APK files
+      run: |
+        echo "Searching for APK files..."
+        find android -name "*.apk" -type f
         
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
@@ -58,3 +72,4 @@ jobs:
         name: calculator-debug-apk
         path: android/app/build/outputs/apk/debug/app-debug.apk
         retention-days: 30
+        if-no-files-found: error
