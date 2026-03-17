@@ -1,15 +1,9 @@
 name: Build Android APK
 
 on:
-  # 只在手动触发时构建
+  push:
+    branches: [ main, master ]
   workflow_dispatch:
-  # 或者推送到 release 分支时构建
-  push:
-    branches: [ release ]
-  # 或者创建 tag 时构建
-  push:
-    tags:
-      - 'v*'
 
 jobs:
   build:
